@@ -32,7 +32,7 @@ The benchmark evaluates these tools across:
 
 The results provide a pragmatic decision framework for selecting the most suitable tool based on data characteristics and computational constraints.
 
-## Repository Structure
+## Project Structure
 ```
 Cell_Annotation_Tools_Benchmark/
 ├── data/                           # Input data (not included, download from GEO)
@@ -212,5 +212,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-Thank you for exploring the **Cell_Annotation_Tools_Benchmark** repository! For questions, contact the repository owner via GitHub.
-"""
+Thank you for exploring the **Cell_Annotation_Tools_Benchmark** repository! For questions, contact the me via GitHub.
