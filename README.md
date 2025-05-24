@@ -2,7 +2,7 @@
 
 Welcome to the **Cell_Annotation_Tools_Benchmark** repository, a comprehensive benchmark study evaluating the performance of three automated cell type annotation tools—**SingleR**, **scmap**, and **scANVI**—for single-cell RNA-sequencing (scRNA-seq) data. This project systematically assesses these tools under varying reference data availability, batch heterogeneity, and computational constraints, providing practical guidance for tool selection in real-world scRNA-seq analysis.
 
-This repository contains the code, data processing pipeline, and visualization scripts used to generate the results presented in the associated research report (Task 82074). The study focuses on pragmatic robustness, addressing challenges such as scarce reference data, batch effects, and computational scalability.
+This repository contains the code, data processing pipeline, and visualization scripts used to generate the results presented in the associated research report. The study focuses on pragmatic robustness, addressing challenges such as scarce reference data, batch effects, and computational scalability.
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
