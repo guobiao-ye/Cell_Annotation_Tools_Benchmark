@@ -23,9 +23,9 @@ combined_time_data_ext <- data.frame(
     3.710033,   # scmap
     
     # 0.50
-    7.0,       # SingleR
-    (25.0 + 3.5 + 0.05), # scANVI
-    5.0,       # scmap
+    7.138324,       # SingleR
+    (26.246883 + 3.364682 + 0.048358), # scANVI
+    4.853243,       # scmap
     
     # 0.25
     6.525334,  # SingleR
@@ -38,9 +38,9 @@ combined_time_data_ext <- data.frame(
     6.550142,   # scmap
     
     # 0.05
-    2.5,       # SingleR
-    (5.0 + 1.5 + 0.5),  # scANVI
-    8.0,       # scmap
+    2.462892,       # SingleR
+    (5.173529 + 1.482316 + 0.473456),  # scANVI
+    7.948424,       # scmap
     
     # 0.025
     1.938152,  # SingleR
@@ -48,9 +48,9 @@ combined_time_data_ext <- data.frame(
     10.037626,  # scmap
     
     # 0.0125
-    1.5,       # SingleR
-    (2.5 + 1.2 + 0.2), # scANVI
-    11.0       # scmap
+    1.442472,       # SingleR
+    (2.428911 + 1.215779 + 0.187492), # scANVI
+    11.063792       # scmap
   )
 )
 
