@@ -30,19 +30,19 @@ combined_resource_data <- data.frame(
                         levels = c("CPU_RAM", "GPU_VRAM", "CPU_RAM_placeholder_scmap_vram")),
   Value = c(
     # 0.75
-    3.15, 12.55, 6.75, 2.95, NA, # SingleR CPU, scANVI CPU, scANVI GPU, scmap CPU, scmap GPU (NA)
+    3.17, 12.56, 6.73, 2.95, NA, # SingleR CPU, scANVI CPU, scANVI GPU, scmap CPU, scmap GPU (NA)
     # 0.50
-    3.05, 9.35, 4.65, 2.75, NA,
+    3.05, 9.34, 4.66, 2.76, NA,
     # 0.25
-    2.25, 6.15, 3.25, 2.10, NA,
+    2.25, 6.14, 3.26, 2.08, NA,
     # 0.125
-    1.55, 4.20, 2.15, 1.65, NA,
+    1.55, 4.19, 2.14, 1.64, NA,
     # 0.05
-    1.10, 2.75, 1.45, 1.40, NA,
+    1.11, 2.75, 1.45, 1.39, NA,
     # 0.025
-    0.85, 2.15, 1.10, 1.25, NA,
+    0.84, 2.14, 1.11, 1.25, NA,
     # 0.0125
-    0.70, 1.50, 0.85, 1.30, NA
+    0.69, 1.51, 0.86, 1.32, NA
   )
 )
 
