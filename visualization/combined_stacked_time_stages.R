@@ -1,95 +1,178 @@
 # Load necessary libraries
 library(ggplot2)
 library(dplyr)
+library(tidyr) # For pivot_longer
 library(scales) # For percentage labels
 
-# --- Execution time data for Combined dataset (seconds) ---
-combined_time_data_ext <- data.frame(
-  Proportion_Numeric = c(
-    0.75, 0.75, 0.75,        
-    0.50, 0.50, 0.50,        
-    0.25, 0.25, 0.25,        
-    0.125, 0.125, 0.125,     
-    0.05, 0.05, 0.05,        
-    0.025, 0.025, 0.025,     
-    0.0125, 0.0125, 0.0125   
-  ),
-  Method = factor(rep(c("SingleR", "scANVI", "scmap"), times = 7),
-                  levels = c("SingleR", "scANVI", "scmap")),
-  Total_Execution_Time = c(
-    # 0.75
-    7.482671,  # SingleR
-    (39.095456 + 5.177625 + 0.032472), # scANVI
-    3.710033,   # scmap
-    
-    # 0.50
-    7.138324,       # SingleR
-    (26.246883 + 3.364682 + 0.048358), # scANVI
-    4.853243,       # scmap
-    
-    # 0.25
-    6.525334,  # SingleR
-    (14.530908 + 2.955436 + 0.065918), # scANVI
-    6.011979,   # scmap
-    
-    # 0.125
-    3.863534,  # SingleR
-    (8.244467 + 1.864307 + 1.206973), # scANVI
-    6.550142,   # scmap
-    
-    # 0.05
-    2.462892,       # SingleR
-    (5.173529 + 1.482316 + 0.473456),  # scANVI
-    7.948424,       # scmap
-    
-    # 0.025
-    1.938152,  # SingleR
-    (3.807783 + 1.840196 + 0.080123), # scANVI
-    10.037626,  # scmap
-    
-    # 0.0125
-    1.442472,       # SingleR
-    (2.428911 + 1.215779 + 0.187492), # scANVI
-    11.063792       # scmap
-  )
+# --- Execution time data for each stage of Combined dataset (seconds) ---
+# Stage: 'Annotation' (for SingleR),
+#        'scVI_Train', 'scANVI_Finetune', 'Predict' (for scANVI)
+#        'FeatSel', 'Indexing', 'Predict' (for scmap)
+
+combined_stages_time_data <- data.frame(
+  Proportion_Numeric = numeric(),
+  Method = factor(),
+  Stage = factor(),
+  Time = numeric()
 )
 
-# Plot line chart
-p_time_combined_ext <- ggplot(combined_time_data_ext,
-                              aes(x = Proportion_Numeric, y = Total_Execution_Time, group = Method, color = Method)) +
-  geom_line(linewidth = 1.2) + # Thicker lines
-  geom_point(size = 3.5, aes(shape = Method)) + # Add points with different shapes
-  scale_color_manual(values = c("SingleR" = "#1f77b4", "scANVI" = "#ff7f0e", "scmap" = "#2ca02c")) +
-  scale_shape_manual(values = c("SingleR" = 16, "scANVI" = 17, "scmap" = 15)) + # Circle, triangle, square
-  labs(title = "Execution Time Comparison on Combined (10X + CEL-Seq2) Dataset",
+# Helper function to add data
+add_method_data <- function(df, prop, method_name, times_list, stage_names_list) {
+  for (i in 1:length(stage_names_list)) {
+    df <- rbind(df, data.frame(
+      Proportion_Numeric = prop,
+      Method = method_name,
+      Stage = stage_names_list[i],
+      Time = times_list[i]
+    ))
+  }
+  return(df)
+}
+
+# --- 0.75 Training ---
+# SingleR
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.75, "SingleR",
+                                             c(7.482671), c("Annotation"))
+# scANVI
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.75, "scANVI",
+                                             c(39.095456, 5.177625, 0.032472),
+                                             c("scVI_Train", "scANVI_Finetune", "Predict"))
+# scmap
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.75, "scmap",
+                                             c(1.900760, 0.751975, 1.057298),
+                                             c("FeatSel", "Indexing", "Predict"))
+
+# --- 0.50 Training ---
+# SingleR
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.50, "SingleR",
+                                             c(7.138324), c("Annotation"))
+# scANVI
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.50, "scANVI",
+                                             c(26.246883, 3.364682, 0.048358),
+                                             c("scVI_Train", "scANVI_Finetune", "Predict"))
+# scmap
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.50, "scmap",
+                                             c(1.102461, 0.481881, 3.268901),
+                                             c("FeatSel", "Indexing", "Predict"))
+
+# --- 0.25 Training ---
+# SingleR
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.25, "SingleR",
+                                             c(6.525334), c("Annotation"))
+# scANVI
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.25, "scANVI",
+                                             c(14.530908, 2.955436, 0.065918),
+                                             c("scVI_Train", "scANVI_Finetune", "Predict"))
+# scmap
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.25, "scmap",
+                                             c(0.268833, 0.255441, 5.487705),
+                                             c("FeatSel", "Indexing", "Predict"))
+
+# --- 0.125 Training ---
+# SingleR
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.125, "SingleR",
+                                             c(3.863534), c("Annotation"))
+# scANVI
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.125, "scANVI",
+                                             c(8.244467, 1.864307, 1.206973),
+                                             c("scVI_Train", "scANVI_Finetune", "Predict"))
+# scmap
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.125, "scmap",
+                                             c(0.136116, 0.151635, 6.262391),
+                                             c("FeatSel", "Indexing", "Predict"))
+
+# --- 0.05 Training ---
+# SingleR
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.05, "SingleR",
+                                             c(2.462892), c("Annotation"))
+# scANVI
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.05, "scANVI",
+                                             c(5.173529, 1.482316, 0.473456),
+                                             c("scVI_Train", "scANVI_Finetune", "Predict"))
+# scmap
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.05, "scmap",
+                                             c(0.080242, 0.069825, 7.798357),
+                                             c("FeatSel", "Indexing", "Predict"))
+
+# --- 0.025 Training ---
+# SingleR
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.025, "SingleR",
+                                             c(1.938152), c("Annotation"))
+# scANVI
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.025, "scANVI",
+                                             c(3.807783, 1.840196, 0.080123),
+                                             c("scVI_Train", "scANVI_Finetune", "Predict"))
+# scmap
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.025, "scmap",
+                                             c(0.124933, 0.113169, 9.799524),
+                                             c("FeatSel", "Indexing", "Predict"))
+
+# --- 0.0125 Training ---
+# SingleR
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.0125, "SingleR",
+                                             c(1.442472), c("Annotation"))
+# scANVI
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.0125, "scANVI",
+                                             c(2.428911, 1.215779, 0.187492),
+                                             c("scVI_Train", "scANVI_Finetune", "Predict"))
+# scmap
+combined_stages_time_data <- add_method_data(combined_stages_time_data, 0.0125, "scmap",
+                                             c(0.049246, 0.048892, 10.965654),
+                                             c("FeatSel", "Indexing", "Predict"))
+
+# Ensure factor order
+combined_stages_time_data$Method <- factor(combined_stages_time_data$Method, levels = c("SingleR", "scmap", "scANVI"))
+combined_stages_time_data$Stage <- factor(combined_stages_time_data$Stage, levels = c(
+  "Annotation", # SingleR
+  "FeatSel", "Indexing", "Predict", # scmap (Predict for scmap comes after Indexing)
+  "scVI_Train", "scANVI_Finetune", "Predict_scANVI" # scANVI (renaming scANVI's predict to avoid clash)
+))
+# Rename scANVI's Predict stage to avoid confusion with scmap's Predict in the legend, if colors are assigned by Stage
+combined_stages_time_data$Stage[combined_stages_time_data$Method == "scANVI" & combined_stages_time_data$Stage == "Predict"] <- "Predict_scANVI"
+# Update factor levels to include renamed stage
+combined_stages_time_data$Stage <- factor(combined_stages_time_data$Stage, levels = c(
+  "Annotation", "FeatSel", "Indexing", "Predict",
+  "scVI_Train", "scANVI_Finetune", "Predict_scANVI"
+))
+
+# Define stage colors (ensure correspondence with Stage factor levels above)
+stage_colors <- c(
+  "Annotation" = "grey50",      # SingleR
+  "FeatSel" = "#fdc086",      # scmap - Feature Selection
+  "Indexing" = "#beaed4",     # scmap - Indexing
+  "Predict" = "#7fc97f",      # scmap - Prediction
+  "scVI_Train" = "#ffff99",   # scANVI - scVI Training (light yellow)
+  "scANVI_Finetune" = "#386cb0", # scANVI - Finetuning (deep blue)
+  "Predict_scANVI" = "#f0027f"  # scANVI - Prediction (pink)
+)
+
+# Plot grouped stacked bar chart
+p_stacked_time_combined <- ggplot(combined_stages_time_data,
+                                  aes(x = factor(Proportion_Numeric), y = Time, fill = Stage)) +
+  geom_bar(stat = "identity", position = "stack", width = 0.8) +
+  facet_wrap(~ Method, scales = "free_x", ncol = 3) + # One panel per method, X-axis independent to show all proportions
+  scale_fill_manual(values = stage_colors, name = "Execution Stage") +
+  labs(title = "Execution Time Breakdown on Combined (10X + CEL-Seq2) Dataset by Reference Proportion",
        x = "Reference Set Proportion",
-       y = "Total Execution Time (seconds)",
-       color = "Method",
-       shape = "Method") +
-  theme_minimal(base_size = 15) + # Increase base font size
+       y = "Execution Time (seconds, log scale)") +
+  theme_bw(base_size = 12) +
   theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 18),
-    legend.position = "top",
-    legend.title = element_text(size = 14),
-    legend.text = element_text(size = 12),
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
     axis.title = element_text(size = 14),
-    axis.text = element_text(size = 12),
-    panel.grid.major = element_line(colour = "grey85"), # Major grid lines
-    panel.grid.minor = element_line(colour = "grey90")  # Minor grid lines
+    legend.position = "top",
+    strip.text = element_text(face = "bold", size = 12), # Panel titles
+    panel.spacing = unit(1, "lines")
   ) +
-  scale_x_continuous(
-    breaks = seq(0, 0.80, by = 0.10), # Regular intervals, e.g., every 10%
-    labels = scales::percent_format(accuracy = 1), # X-axis in percentage
-    limits = c(0, 0.80) # Set X-axis range to ensure all points are visible
-  ) +
+  scale_x_discrete(labels = function(x) paste0(as.numeric(x) * 100, "%")) + # X-axis in percentage
   scale_y_log10(
-    breaks = scales::trans_breaks("log10", function(x) 10^x), # Standard log scale
+    breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x))
   ) +
-  annotation_logticks(sides = "l") # Add log ticks on the left Y-axis
+  annotation_logticks(sides = "l")
 
 # Display the plot
-print(p_time_combined_ext)
+print(p_stacked_time_combined)
 
 # Save the plot if needed
-ggsave("combined_time_comparison.png", plot = p_time_combined_ext, width = 12, height = 7, dpi = 300)
+ggsave("combined_stacked_time_stages.png", plot = p_stacked_time_combined, width = 14, height = 7, dpi = 300)
